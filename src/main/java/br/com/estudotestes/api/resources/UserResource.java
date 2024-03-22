@@ -42,4 +42,13 @@ public class UserResource {
                 .toUri();
         return ResponseEntity.created(uri).build();
     }
+
+    @PutMapping
+    public ResponseEntity<UsersDTO> update(@RequestBody UsersDTO usersDTO) {
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(userService.update(usersDTO).getId())
+                .toUri();
+        return ResponseEntity.created(uri).build();
+    }
 }
