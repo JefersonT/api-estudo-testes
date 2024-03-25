@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class UserServiceImplTest {
@@ -28,7 +28,7 @@ class UserServiceImplTest {
     public static final String NAME = "Valdir";
     public static final String EMAIL = "valdir@gmail.com";
     public static final String PASSWORD = "132";
-    public static final String OBJECT_NOT_FOUND = "Object not found!";
+    public static final String OBJECT_NOT_FOUND = OBJECT_NOT_FOUND;
     public static final String E_MAIL_JA_CADASTRADO_NO_SISTEMA = "E-mail já cadastrado no sistema";
     @InjectMocks
     private UserServiceImpl userService;
@@ -145,7 +145,26 @@ class UserServiceImplTest {
     }
 
     @Test
-    void delete() {
+    void whenDeleteWithSucess() {
+        when(userRepository.findById(anyInt()))
+                .thenReturn(optionalUsers);
+        doNothing().when(userRepository)
+                .deleteById(anyInt());
+        
+        userService.delete(ID);
+        verify(userRepository, times(1)).deleteById(anyInt());
+    }
+
+    @Test
+    void whenDeleteWithObjectNotFounException() {
+        when(userRepository.findById(anyInt()))
+                .thenThrow(new ObjectNotFoundException(OBJECT_NOT_FOUND));
+        try {
+            userService.delete(ID);
+        } catch (Exception ex) {
+            assertEquals(ObjectNotFoundException.class, ex.getClass());
+            assertEquals(OBJECT_NOT_FOUND, ex.getMessage());
+        }
     }
 
     private void startUsers() {
