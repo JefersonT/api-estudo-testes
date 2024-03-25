@@ -3,6 +3,7 @@ package br.com.estudotestes.api.services.impl;
 import br.com.estudotestes.api.domain.Users;
 import br.com.estudotestes.api.domain.dto.UsersDTO;
 import br.com.estudotestes.api.repositories.UserRepository;
+import br.com.estudotestes.api.services.exceptions.DataIntegratyViolationException;
 import br.com.estudotestes.api.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -91,7 +92,28 @@ class UserServiceImplTest {
     }
 
     @Test
-    void create() {
+    void whenCreateThenReturnSuccess() {
+        when(userRepository.save(any())).thenReturn(users);
+
+        Users response = userService.create(usersDTO);
+
+        assertNotNull(response);
+        assertEquals(Users.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(EMAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
+    }
+
+    @Test
+    void whenCreateThenReturnAnDataIntegrityViolationException() {
+        when(userRepository.findByEmail(anyString())).thenReturn(optionalUsers);
+        try {
+            optionalUsers.get().setId(2);
+            userService.create(usersDTO);
+        } catch (Exception ex) {
+            assertEquals(DataIntegratyViolationException.class, ex.getClass());
+        }
     }
 
     @Test
