@@ -28,7 +28,7 @@ class UserServiceImplTest {
     public static final String NAME = "Valdir";
     public static final String EMAIL = "valdir@gmail.com";
     public static final String PASSWORD = "132";
-    public static final String OBJECT_NOT_FOUND = OBJECT_NOT_FOUND;
+    public static final String OBJECT_NOT_FOUND = "Object not found!";
     public static final String E_MAIL_JA_CADASTRADO_NO_SISTEMA = "E-mail já cadastrado no sistema";
     @InjectMocks
     private UserServiceImpl userService;
