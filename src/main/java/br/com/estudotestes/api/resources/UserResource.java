@@ -10,6 +10,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -32,7 +33,7 @@ public class UserResource {
         return ResponseEntity.ok()
                 .body(userService.findAll()
                         .stream().map(user -> mapper.map(user, UsersDTO.class))
-                        .toList());
+                        .collect(Collectors.toList()));
     }
 
     @PostMapping
