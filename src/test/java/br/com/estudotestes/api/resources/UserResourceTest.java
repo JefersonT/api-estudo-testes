@@ -125,7 +125,7 @@ class UserResourceTest {
     }
 
     @Test
-    void delete() {
+    void whenDeleteThenReturnSuccess() {
         doNothing().when(userService).delete(anyInt());
         ResponseEntity<UsersDTO> response = userResource.delete(ID);
 
